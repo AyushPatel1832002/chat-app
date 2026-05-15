@@ -207,7 +207,7 @@ export default function Sidebar() {
               new Map(filteredUsers.map((u) => [u._id, u])).values()
             ).map((user: any, idx) => {
               const currentUserId = String(
-                currentUser?._id || currentUser?.id || ""
+                currentUser?._id || currentUser?._id || ""
               );
 
               const targetUserId = String(user?._id || user?.id || "");

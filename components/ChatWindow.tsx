@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useChatStore } from "@/store/useChatStore";
-import { Send, MoreVertical, Phone, Video, Smile, Paperclip, UserPlus, MessageSquare } from "lucide-react";
+import { Send, MoreVertical, Phone, Video, Smile, Paperclip, UserPlus } from "lucide-react";
 import { useSocket } from "@/hooks/useSocket";
 import { fetchApi } from "@/lib/api";
 

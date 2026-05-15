@@ -20,8 +20,8 @@ export const useSocket = () => {
       console.log("Initializing socket connection for:", currentUser.name);
       socketRef.current = io(SOCKET_URL, {
         query: { 
-          userId: String(currentUser?._id || currentUser?.id || ""), 
-          name: String(currentUser?.name || "") 
+          userId: String(currentUser?._id || currentUser?._id || ""), 
+          name: String(currentUser?.name || currentUser?._id || "") 
         },
         reconnection: true,
         reconnectionAttempts: 10,
@@ -64,7 +64,7 @@ export const useSocket = () => {
         socketRef.current = null;
       }
     };
-  }, [currentUser?._id, currentUser?.id]); // Only reconnect if user ID changes
+  }, [currentUser?._id, currentUser?._id]); // Only reconnect if user ID changes
 
 
   return socketRef.current;
