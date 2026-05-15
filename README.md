@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Aura Chat - Real-time Next.js 15 Application
 
-## Getting Started
+A production-ready real-time chat application built with Next.js 15 (App Router), Socket.IO, MongoDB, and Zustand.
 
-First, run the development server:
+## Features
 
+- **Hybrid Architecture**: Next.js App Router for UI/APIs + Standalone Node.js server for WebSockets.
+- **Edge Middleware**: Low-latency authentication and route protection.
+- **Real-time**: Instant messaging, typing indicators, and presence detection via Socket.IO.
+- **Optimistic UI**: Instant feedback on message delivery with background synchronization.
+- **Responsive Design**: Premium dark-themed UI with glassmorphism and animations.
+- **Infinite Scroll**: Progressive loading of message history.
+
+## Tech Stack
+
+- **Framework**: Next.js 15 (App Router)
+- **Runtime**: Node.js (WebSockets) & Edge (Middleware)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **State**: Zustand
+- **Database**: MongoDB (Mongoose)
+- **Real-time**: Socket.IO
+
+## Setup Instructions
+
+### 1. Prerequisites
+- Node.js 18+
+- MongoDB instance (Local or Atlas)
+
+### 2. Environment Variables
+Copy `.env.example` to `.env` and fill in your details:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Install Dependencies
+```bash
+npm install --legacy-peer-deps
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 4. Run the Application
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+#### Terminal 1: Next.js Development Server
+```bash
+npm run dev
+```
 
-## Learn More
+#### Terminal 2: Socket.IO WebSocket Server
+```bash
+npm run socket
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Frontend (Next.js)
+Deploy to **Vercel** as a standard Next.js project.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Real-time Server (Socket.IO)
+Deploy `server.js` to a Node.js hosting provider (Railway, Render, DigitalOcean, etc.).
+Update `NEXT_PUBLIC_SOCKET_URL` in your Vercel environment variables to point to this server.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Folder Structure
+- `/app`: App Router pages and API routes.
+- `/components`: Reusable UI components.
+- `/lib`: Utilities (MongoDB, Auth).
+- `/models`: Mongoose schemas.
+- `/store`: Zustand state management.
+- `/hooks`: Custom React hooks (Socket).
+- `server.js`: The WebSocket server.
