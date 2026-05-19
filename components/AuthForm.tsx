@@ -41,6 +41,8 @@ export default function AuthForm({ mode }: AuthFormProps) {
 
       if (data.token) {
         localStorage.setItem("token", data.token);
+        // Set first-party cookie for Next.js middleware
+        document.cookie = `token=${data.token}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax; Secure`;
       }
 
       setCurrentUser(data.user);
