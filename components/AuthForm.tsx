@@ -20,6 +20,34 @@ export default function AuthForm({ mode }: AuthFormProps) {
   
   const router = useRouter();
   const { setCurrentUser } = useChatStore();
+  const [debugInfo, setDebugInfo] = useState({
+    apiUrl: "",
+    socketUrl: "",
+    localStorageToken: "",
+    cookieToken: ""
+  });
+
+  const getCookie = (name: string) => {
+    if (typeof document === "undefined") return "";
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop()?.split(';').shift() || "";
+    return "";
+  };
+
+  useState(() => {
+    // Read tokens on initial client mount/render
+    if (typeof window !== "undefined") {
+      setTimeout(() => {
+        setDebugInfo({
+          apiUrl: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001 (default fallback)",
+          socketUrl: process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:3001 (default fallback)",
+          localStorageToken: localStorage.getItem("token") || "Not found",
+          cookieToken: getCookie("token") || "Not found"
+        });
+      }, 100);
+    }
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,6 +72,14 @@ export default function AuthForm({ mode }: AuthFormProps) {
         // Set first-party cookie for Next.js middleware
         document.cookie = `token=${data.token}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax; Secure`;
       }
+
+      // Update debug info state
+      setDebugInfo({
+        apiUrl: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001 (default fallback)",
+        socketUrl: process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:3001 (default fallback)",
+        localStorageToken: data.token || "Not found",
+        cookieToken: data.token || "Not found"
+      });
 
       setCurrentUser(data.user);
       router.push("/chat");
@@ -133,6 +169,30 @@ export default function AuthForm({ mode }: AuthFormProps) {
           <span>{mode === "login" ? "Sign In" : "Create Account"}</span>
         )}
       </button>
+
+      {/* Developer Diagnostic Panel */}
+      <div className="p-4 bg-slate-900/60 rounded-2xl border border-white/5 text-[10px] font-mono text-slate-400 space-y-1 select-all relative overflow-hidden">
+        <div className="font-bold text-slate-300 uppercase tracking-widest text-[9px] mb-2 flex items-center justify-between">
+          <span>Diagnostic Debug Panel</span>
+          <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+        </div>
+        <div className="flex justify-between">
+          <span className="text-slate-500">API_URL:</span>
+          <span className="text-indigo-300">{debugInfo.apiUrl}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-slate-500">SOCKET_URL:</span>
+          <span className="text-indigo-300">{debugInfo.socketUrl}</span>
+        </div>
+        <div className="flex justify-between items-center gap-4">
+          <span className="text-slate-500 shrink-0">LS Token:</span>
+          <span className="text-amber-400 truncate max-w-[240px]">{debugInfo.localStorageToken}</span>
+        </div>
+        <div className="flex justify-between items-center gap-4">
+          <span className="text-slate-500 shrink-0">Cookie Token:</span>
+          <span className="text-amber-400 truncate max-w-[240px]">{debugInfo.cookieToken}</span>
+        </div>
+      </div>
     </form>
   );
 }
