@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-super-secret-key-change-this-in-prod";
 
@@ -23,7 +23,15 @@ export const verifyToken = (token: string): TokenPayload | null => {
 
 export const getAuthUser = async () => {
   const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
+  let token = cookieStore.get("token")?.value;
+
+  if (!token) {
+    const headersList = await headers();
+    const authHeader = headersList.get("authorization");
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      token = authHeader.substring(7);
+    }
+  }
 
   if (!token) return null;
 
