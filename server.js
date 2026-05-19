@@ -152,13 +152,21 @@ const authenticate = async (req, res, next) => {
 app.post("/api/auth/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    if (!name || !email || !password) return res.status(400).json({ error: "Missing fields" });
+    console.log(`[API Register] Attempting registration for: ${email}`);
+    if (!name || !email || !password) {
+      console.log("[API Register] Registration failed: Missing fields");
+      return res.status(400).json({ error: "Missing fields" });
+    }
 
     const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ error: "User already exists" });
+    if (existingUser) {
+      console.log(`[API Register] Registration failed: User ${email} already exists`);
+      return res.status(400).json({ error: "User already exists" });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 12);
     const user = await User.create({ name, email, password: hashedPassword });
+    console.log(`[API Register] User created successfully: ${email}`);
 
     const token = jwt.sign({ userId: user._id, email: user.email, name: user.name }, JWT_SECRET, { expiresIn: "7d" });
 
@@ -171,6 +179,7 @@ app.post("/api/auth/register", async (req, res) => {
 
     res.status(201).json({ user: { id: user._id, name: user.name, email: user.email }, token });
   } catch (error) {
+    console.log(`[API Register] Error: ${error.message}`);
     res.status(500).json({ error: error.message });
   }
 });
@@ -178,11 +187,14 @@ app.post("/api/auth/register", async (req, res) => {
 app.post("/api/auth/login", async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log(`[API Login] Attempting login for: ${email}`);
     const user = await User.findOne({ email });
     if (!user || !(await bcrypt.compare(password, user.password))) {
+      console.log(`[API Login] Login failed: Invalid credentials for ${email}`);
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
+    console.log(`[API Login] Login successful for: ${email}`);
     const token = jwt.sign({ userId: user._id, email: user.email, name: user.name }, JWT_SECRET, { expiresIn: "7d" });
 
     res.cookie("token", token, {
@@ -194,6 +206,7 @@ app.post("/api/auth/login", async (req, res) => {
 
     res.status(200).json({ user: { id: user._id, name: user.name, email: user.email }, token });
   } catch (error) {
+    console.log(`[API Login] Error: ${error.message}`);
     res.status(500).json({ error: error.message });
   }
 });
