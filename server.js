@@ -121,6 +121,8 @@ app.use("/api/auth", limiter);
 const authenticate = async (req, res, next) => {
   try {
     let token = req.cookies.token;
+    console.log(`[AuthMiddleware] Cookie Token: ${token ? "Present" : "Missing"}`);
+    console.log(`[AuthMiddleware] Auth Header: ${req.headers.authorization ? "Present" : "Missing"}`);
     
     // Fallback: check Authorization header
     if (!token && req.headers.authorization) {
@@ -130,12 +132,16 @@ const authenticate = async (req, res, next) => {
       }
     }
 
-    if (!token) return res.status(401).json({ error: "Unauthorized" });
+    if (!token) {
+      console.log("[AuthMiddleware] Verification failed: No token found");
+      return res.status(401).json({ error: "Unauthorized" });
+    }
 
     const decoded = jwt.verify(token, JWT_SECRET);
     req.user = decoded;
     next();
   } catch (error) {
+    console.log(`[AuthMiddleware] Verification failed: ${error.message}`);
     res.status(401).json({ error: "Invalid token" });
   }
 };
