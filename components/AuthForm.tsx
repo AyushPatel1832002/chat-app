@@ -39,6 +39,10 @@ export default function AuthForm({ mode }: AuthFormProps) {
         throw new Error(data.error || "Something went wrong");
       }
 
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+      }
+
       setCurrentUser(data.user);
       router.push("/chat");
     } catch (err: any) {

@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { MessageSquare, Shield, Zap, Globe, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-
+import { SpeedInsights } from "@vercel/speed-insights/next"
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#020617] flex flex-col items-center justify-center relative overflow-hidden">
+      <SpeedInsights /> 
       {/* Background Orbs */}
       <div className="absolute top-0 -left-4 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[128px] opacity-50" />
       <div className="absolute bottom-0 -right-4 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[128px] opacity-50" />

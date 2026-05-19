@@ -88,6 +88,10 @@ export default function Sidebar() {
         method: "POST",
       });
 
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("token");
+      }
+
       router.push("/login");
       router.refresh();
     } catch (error) {

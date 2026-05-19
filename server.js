@@ -120,7 +120,16 @@ app.use("/api/auth", limiter);
 // --- Auth Middleware ---
 const authenticate = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
+    let token = req.cookies.token;
+    
+    // Fallback: check Authorization header
+    if (!token && req.headers.authorization) {
+      const parts = req.headers.authorization.split(" ");
+      if (parts[0] === "Bearer") {
+        token = parts[1];
+      }
+    }
+
     if (!token) return res.status(401).json({ error: "Unauthorized" });
 
     const decoded = jwt.verify(token, JWT_SECRET);
@@ -154,7 +163,7 @@ app.post("/api/auth/register", async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(201).json({ user: { id: user._id, name: user.name, email: user.email } });
+    res.status(201).json({ user: { id: user._id, name: user.name, email: user.email }, token });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -177,7 +186,7 @@ app.post("/api/auth/login", async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(200).json({ user: { id: user._id, name: user.name, email: user.email } });
+    res.status(200).json({ user: { id: user._id, name: user.name, email: user.email }, token });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
