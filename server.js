@@ -26,7 +26,7 @@ if (fs.existsSync(envPath)) {
 }
 
 const MONGODB_URI = process.env.MONGODB_URI;
-const JWT_SECRET = process.env.JWT_SECRET || "fallback-secret-key-12345";
+const JWT_SECRET = process.env.JWT_SECRET || "your-super-secret-key-change-this-in-prod";
 const CLIENT_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
 if (!MONGODB_URI) {

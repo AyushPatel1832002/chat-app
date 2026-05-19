@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import * as jose from "jose";
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "fallback-secret-key-12345"
+  process.env.JWT_SECRET || "your-super-secret-key-change-this-in-prod"
 );
 
 export async function middleware(request: NextRequest) {
