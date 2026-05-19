@@ -30,6 +30,7 @@ interface ChatState {
   isConnected: boolean;
   users: any[];
   rooms: any[];
+  isLoading: boolean;
   
   setCurrentUser: (user: User | null) => void;
   setActiveRoom: (roomId: string | null) => void;
@@ -44,6 +45,7 @@ interface ChatState {
   setRooms: (rooms: any[]) => void;
   addUser: (user: any) => void;
   addRoom: (room: any) => void;
+  setIsLoading: (loading: boolean) => void;
 }
 
 export const useChatStore = create<ChatState>((set) => ({
@@ -56,6 +58,7 @@ export const useChatStore = create<ChatState>((set) => ({
   isConnected: false,
   users: [],
   rooms: [],
+  isLoading: true,
 
   setCurrentUser: (user) => set({ currentUser: user }),
   setActiveRoom: (roomId) => set({ activeRoom: roomId }),
@@ -102,4 +105,5 @@ export const useChatStore = create<ChatState>((set) => ({
   setRooms: (rooms) => set({ rooms }),
   addUser: (user) => set((state) => ({ users: [...state.users, user] })),
   addRoom: (room) => set((state) => ({ rooms: [...state.rooms, room] })),
+  setIsLoading: (loading) => set({ isLoading: loading }),
 }));

@@ -18,6 +18,7 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
   const setCurrentUser = useChatStore((state) => state.setCurrentUser);
   const setUsers = useChatStore((state) => state.setUsers);
   const setRooms = useChatStore((state) => state.setRooms);
+  const setIsLoading = useChatStore((state) => state.setIsLoading);
   const router = useRouter();
   
   // Initialize socket connection
@@ -58,11 +59,13 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
       } catch (error) {
         console.error("Bootstrap failed", error);
         router.push("/login");
+      } finally {
+        setIsLoading(false);
       }
     };
 
     bootstrapApp();
-  }, [setCurrentUser, setUsers, setRooms, router]);
+  }, [setCurrentUser, setUsers, setRooms, setIsLoading, router]);
 
   return (
     <div className="flex h-screen bg-[#020617] overflow-hidden">

@@ -51,7 +51,7 @@ export default function Sidebar() {
     return rooms.filter((r) => r?.name?.toLowerCase().includes(debouncedSearch.toLowerCase()));
   }, [rooms, debouncedSearch]);
 
-  const isLoading = users.length === 0 && rooms.length === 0;
+  const isLoading = useChatStore((state) => state.isLoading);
 
   const handleCreateRoom = async () => {
     const name = prompt("Enter room name:");
