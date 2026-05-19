@@ -87,7 +87,21 @@ app.use(cookieParser());
 
 // CORS Configuration
 const corsOptions = {
-  origin: [CLIENT_URL, "http://localhost:3000", "https://*.netlify.app"],
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps, curl, etc)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [CLIENT_URL, "http://localhost:3000"];
+    const isAllowed = allowedOrigins.includes(origin) || 
+                      origin.endsWith(".vercel.app") || 
+                      origin.endsWith(".netlify.app");
+                      
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "Cookie"]
