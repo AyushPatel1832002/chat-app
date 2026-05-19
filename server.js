@@ -96,10 +96,12 @@ const corsOptions = {
                       origin.endsWith(".vercel.app") || 
                       origin.endsWith(".netlify.app");
                       
+    console.log(`[CORS] Origin: ${origin} | Allowed: ${isAllowed}`);
+    
     if (isAllowed) {
       callback(null, true);
     } else {
-      callback(new Error("Not allowed by CORS"));
+      callback(null, false);
     }
   },
   credentials: true,
