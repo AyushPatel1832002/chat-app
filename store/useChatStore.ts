@@ -28,6 +28,8 @@ interface ChatState {
   onlineUsers: string[]; // List of user IDs
   typingUsers: Record<string, string[]>; // roomId -> userNames
   isConnected: boolean;
+  users: any[];
+  rooms: any[];
   
   setCurrentUser: (user: User | null) => void;
   setActiveRoom: (roomId: string | null) => void;
@@ -38,6 +40,10 @@ interface ChatState {
   setOnlineUsers: (users: string[]) => void;
   setTyping: (roomId: string, userNames: string[]) => void;
   setConnectionStatus: (status: boolean) => void;
+  setUsers: (users: any[]) => void;
+  setRooms: (rooms: any[]) => void;
+  addUser: (user: any) => void;
+  addRoom: (room: any) => void;
 }
 
 export const useChatStore = create<ChatState>((set) => ({
@@ -48,6 +54,8 @@ export const useChatStore = create<ChatState>((set) => ({
   onlineUsers: [],
   typingUsers: {},
   isConnected: false,
+  users: [],
+  rooms: [],
 
   setCurrentUser: (user) => set({ currentUser: user }),
   setActiveRoom: (roomId) => set({ activeRoom: roomId }),
@@ -90,4 +98,8 @@ export const useChatStore = create<ChatState>((set) => ({
       typingUsers: { ...state.typingUsers, [roomId]: userNames }
     })),
   setConnectionStatus: (status) => set({ isConnected: status }),
+  setUsers: (users) => set({ users }),
+  setRooms: (rooms) => set({ rooms }),
+  addUser: (user) => set((state) => ({ users: [...state.users, user] })),
+  addRoom: (room) => set((state) => ({ rooms: [...state.rooms, room] })),
 }));

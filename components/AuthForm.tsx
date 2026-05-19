@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useChatStore } from "@/store/useChatStore";
 import { fetchApi } from "@/lib/api";
+import { motion } from "framer-motion";
+import { User, Mail, Lock, Loader2 } from "lucide-react";
 
 interface AuthFormProps {
   mode: "login" | "register";
@@ -47,55 +49,83 @@ export default function AuthForm({ mode }: AuthFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md">
+    <form onSubmit={handleSubmit} className="space-y-6 w-full relative z-10">
       {mode === "register" && (
-        <div className="space-y-1">
-          <label className="text-sm font-medium text-slate-300">Name</label>
+        <div className="space-y-2">
+          <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Name</label>
+          <div className="relative group">
+            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-primary transition-colors" />
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full pl-12 pr-4 py-4 bg-white/[0.03] border border-white/5 rounded-2xl focus:ring-2 focus:ring-primary/50 focus:bg-white/[0.05] outline-none transition-all text-white placeholder:text-slate-600 backdrop-blur-sm"
+              placeholder="John Doe"
+              required
+            />
+          </div>
+        </div>
+      )}
+      
+      <div className="space-y-2">
+        <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
+        <div className="relative group">
+          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-primary transition-colors" />
           <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary outline-none transition-all"
-            placeholder="John Doe"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full pl-12 pr-4 py-4 bg-white/[0.03] border border-white/5 rounded-2xl focus:ring-2 focus:ring-primary/50 focus:bg-white/[0.05] outline-none transition-all text-white placeholder:text-slate-600 backdrop-blur-sm"
+            placeholder="email@example.com"
             required
           />
         </div>
-      )}
-      <div className="space-y-1">
-        <label className="text-sm font-medium text-slate-300">Email</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary outline-none transition-all"
-          placeholder="email@example.com"
-          required
-        />
       </div>
-      <div className="space-y-1">
-        <label className="text-sm font-medium text-slate-300">Password</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary outline-none transition-all"
-          placeholder="••••••••"
-          required
-        />
+
+      <div className="space-y-2">
+        <div className="flex justify-between items-center px-1">
+          <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Password</label>
+          {mode === "login" && (
+            <button type="button" className="text-[10px] font-bold text-primary hover:text-indigo-400 transition-colors uppercase tracking-wider">
+              Forgot?
+            </button>
+          )}
+        </div>
+        <div className="relative group">
+          <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-primary transition-colors" />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full pl-12 pr-4 py-4 bg-white/[0.03] border border-white/5 rounded-2xl focus:ring-2 focus:ring-primary/50 focus:bg-white/[0.05] outline-none transition-all text-white placeholder:text-slate-600 backdrop-blur-sm"
+            placeholder="••••••••"
+            required
+          />
+        </div>
       </div>
 
       {error && (
-        <p className="text-sm text-red-400 bg-red-400/10 p-3 rounded-lg border border-red-400/20">
-          {error}
-        </p>
+        <div 
+          className="text-sm text-red-400 bg-red-400/10 p-4 rounded-2xl border border-red-400/20 flex items-start space-x-3 animate-in fade-in slide-in-from-top-1 duration-200"
+        >
+          <div className="w-1.5 h-1.5 bg-red-400 rounded-full mt-1.5 shrink-0" />
+          <p className="font-medium">{error}</p>
+        </div>
       )}
 
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-3 bg-primary hover:bg-primary/90 disabled:opacity-50 text-white font-semibold rounded-xl transition-all shadow-lg shadow-primary/20"
+        className="w-full py-4 bg-primary hover:bg-indigo-500 disabled:opacity-50 text-white font-bold rounded-2xl transition-all shadow-xl shadow-primary/30 flex items-center justify-center space-x-2 active:scale-[0.98]"
       >
-        {loading ? "Processing..." : mode === "login" ? "Sign In" : "Create Account"}
+        {loading ? (
+          <>
+            <Loader2 className="w-5 h-5 animate-spin" />
+            <span>Processing...</span>
+          </>
+        ) : (
+          <span>{mode === "login" ? "Sign In" : "Create Account"}</span>
+        )}
       </button>
     </form>
   );

@@ -1,1 +1,14 @@
-{}
+{
+  "app\\chat\\layout.tsx -> @/components/Sidebar": {
+    "id": "app\\chat\\layout.tsx -> @/components/Sidebar",
+    "files": [
+      "static/chunks/_app-pages-browser_components_Sidebar_tsx.js"
+    ]
+  },
+  "app\\chat\\page.tsx -> @/components/ChatWindow": {
+    "id": "app\\chat\\page.tsx -> @/components/ChatWindow",
+    "files": [
+      "static/chunks/_app-pages-browser_components_ChatWindow_tsx.js"
+    ]
+  }
+}
