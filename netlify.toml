@@ -6,8 +6,8 @@
   from = "/api/*"
   to = "/api/:splat"
   status = 200
-  
+
 [[headers]]
   for = "/socket.io/*"
-  values =
-    "Access-Control-Allow-Origin: *"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
